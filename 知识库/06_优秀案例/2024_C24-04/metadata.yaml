@@ -1,0 +1,30 @@
+source_id: C24-04
+year: 2024
+problem: C
+title: 基于遗传算法的最优种植策略
+topic: 农作物种植策略优化
+methods:
+- 描述统计
+- 相关分析
+- 线性/整数规划
+- 遗传/进化算法
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2024/C24-04.md
+source_pdf: 官方优秀论文（21-25）/2024/C24-04.pdf
+source_markdown_sha256: c15529665af485fcfdc6a46bb9aa0bfee7acfe77bbf55d9fe226a4aed86b54c9
+source_pdf_sha256: 3676a2a5a52818c15cb92da9a204410a35af78d5141ae73ba2f4ffd2faa54852
+pdf_pages: 24
+question_sections:
+- Q1
+- Q2
+- Q3
+remote_image_references: 21
+local_pdf_images: 24
+requires_human_review: true

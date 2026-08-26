@@ -1,0 +1,41 @@
+source_id: C25-02
+year: 2025
+problem: C
+title: 基于统计建模与元学习的NIPT检测决策优化与异常识别
+topic: NIPT 时点优化与异常识别
+methods:
+- 描述统计
+- 相关分析
+- 假设检验
+- 回归
+- 混合效应模型
+- 聚类
+- 决策树
+- 梯度提升
+- 神经网络
+- 时间序列
+- 贝叶斯模型
+- 多目标优化
+- 遗传/进化算法
+- 交叉验证
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2025/C25-02.md
+source_pdf: 官方优秀论文（21-25）/2025/C25-02.pdf
+source_markdown_sha256: fb347331fde16efd61912a30de98d87aaac014579ae60760ad2b32cf119a5cc0
+source_pdf_sha256: c312a51c662a48778cc6d490eca7115c5a10edd13513eb42de3ac2113dc1bb11
+pdf_pages: 39
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 43
+local_pdf_images: 39
+requires_human_review: true

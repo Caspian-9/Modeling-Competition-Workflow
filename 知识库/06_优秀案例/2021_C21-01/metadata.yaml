@@ -1,0 +1,32 @@
+source_id: C21-01
+year: 2021
+problem: C
+title: 生产企业原材料订购与运输的评价与规划模型
+topic: 生产企业原材料订购与运输
+methods:
+- 描述统计
+- 回归
+- 多目标优化
+- 遗传/进化算法
+- 动态规划
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2021/C21-01.md
+source_pdf: 官方优秀论文（21-25）/2021/C21-01.pdf
+source_markdown_sha256: 3bad576c5df969aba9a812afbb6cda0d1d1664272224d7717f7f2d3953ee4905
+source_pdf_sha256: 1f22cdd942cf50f85252b68acf9032c3aaab91218310e148df162db9d0b4a69c
+pdf_pages: 30
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 25
+local_pdf_images: 30
+requires_human_review: true

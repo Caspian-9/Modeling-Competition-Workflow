@@ -1,0 +1,33 @@
+source_id: C23-02
+year: 2023
+problem: C
+title: 商超蔬菜销售数据的统计分析及建模
+topic: 商超蔬菜销售、定价与补货
+methods:
+- 描述统计
+- 相关分析
+- 假设检验
+- 时间序列
+- 贝叶斯模型
+- 线性/整数规划
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2023/C23-02.md
+source_pdf: 官方优秀论文（21-25）/2023/C23-02.pdf
+source_markdown_sha256: 06775e349ca1d57f170c307660eb8c30a2580da8118abd1fbf3b175837cf501c
+source_pdf_sha256: b6db7dec278920ae6d75364244fed0c61707e60ba196bd485c353f0b321236d9
+pdf_pages: 18
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 19
+local_pdf_images: 18
+requires_human_review: true

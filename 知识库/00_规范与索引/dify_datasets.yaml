@@ -1,0 +1,80 @@
+version: '1.0'
+datasets:
+- dataset_id: kb_shared_statistics
+  name: 共享统计与验证规范
+  paths:
+  - 01_共享基础/统计严谨性检查卡/**/*.md
+  agents:
+  - modeler
+  - engineer
+  - judge
+  retrieval: hybrid
+  top_k: 5
+- dataset_id: kb_model_cards
+  name: 建模方法卡
+  paths:
+  - 02_建模手/模型卡/**/*.md
+  - 02_建模手/模型选择图谱.md
+  agents:
+  - modeler
+  - engineer
+  - judge
+  retrieval: hybrid_with_rerank
+  top_k: 7
+- dataset_id: kb_engineering_failures
+  name: 工程故障与复现
+  paths:
+  - 03_工程师/故障卡/**/*.md
+  agents:
+  - engineer
+  - judge
+  retrieval: hybrid
+  top_k: 5
+- dataset_id: kb_writing
+  name: 论文写作规范
+  paths:
+  - 04_论文手/W*.md
+  - 04_论文手/官方格式规范/OF*.md
+  - 04_论文手/外部模板整合/WR*.md
+  - 04_论文手/克隆仓库/*/01_通用写作规范/*.md
+  - 04_论文手/克隆仓库/*/0[2-7]_*/问题分析要点.md
+  - 04_论文手/克隆仓库/*/0[2-7]_*/建模要点.md
+  - 04_论文手/克隆仓库/*/00_LaTeX基础模板与排版/LaTeX排版规则.md
+  - 04_论文手/克隆仓库/*/00_LaTeX基础模板与排版/结构化撰写速查.md
+  exclude:
+  - '**/AI使用规范.txt'
+  - '**/AI协作Prompt模板.md'
+  - '**/摘要范例.md'
+  - '**/专用话术.md'
+  - '**/README.md'
+  - '**/CONTRIBUTING.md'
+  agents:
+  - writer
+  - judge
+  retrieval: keyword_first
+  top_k: 5
+- dataset_id: kb_judge
+  name: 评委规则与评分
+  paths:
+  - 05_评委/*.md
+  agents:
+  - judge
+  retrieval: keyword_first
+  top_k: 6
+- dataset_id: kb_cases_short
+  name: 优秀案例结构化证据
+  paths:
+  - 06_优秀案例/*/00_论文卡片.md
+  - 06_优秀案例/*/questions/*.md
+  - 06_优秀案例/*/08_创新点.md
+  - 06_优秀案例/*/09_评委批判性审查.md
+  exclude:
+  - '**/audit_removed_fragments.md'
+  - '**/assets/**'
+  agents:
+  - modeler
+  - engineer
+  - writer
+  - judge
+  retrieval: hybrid_with_rerank
+  top_k: 6

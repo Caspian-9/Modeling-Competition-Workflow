@@ -1,0 +1,36 @@
+source_id: C24-02
+year: 2024
+problem: C
+title: 基于差分遗传算法的农作物种植策略优化
+topic: 农作物种植策略优化
+methods:
+- 描述统计
+- 相关分析
+- 假设检验
+- 时间序列
+- 线性/整数规划
+- 多目标优化
+- 随机/鲁棒优化
+- 遗传/进化算法
+- 蒙特卡洛
+- 敏感性分析
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.78
+source_markdown: 官方优秀论文（21-25）/2024/C24-02.md
+source_pdf: 官方优秀论文（21-25）/2024/C24-02.pdf
+source_markdown_sha256: 627efd69698c5263b2f611762854d21fcfc5f8aab6798446b2c6d77d38a8fa06
+source_pdf_sha256: ab5cf28f6160167440449af926dbc93499a9b4479e732b6c4fd85f48693dac3d
+pdf_pages: 75
+question_sections:
+- Q1
+- Q2
+- Q3
+remote_image_references: 52
+local_pdf_images: 75
+requires_human_review: true

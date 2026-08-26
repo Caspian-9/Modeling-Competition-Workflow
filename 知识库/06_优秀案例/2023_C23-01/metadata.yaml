@@ -1,0 +1,33 @@
+source_id: C23-01
+year: 2023
+problem: C
+title: 某商超蔬菜类商品动态定价与补货决策研究
+topic: 商超蔬菜销售、定价与补货
+methods:
+- 描述统计
+- 相关分析
+- 回归
+- 聚类
+- 时间序列
+- 线性/整数规划
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2023/C23-01.md
+source_pdf: 官方优秀论文（21-25）/2023/C23-01.pdf
+source_markdown_sha256: accae7560003687e5d5bc729e7326c298c09e807feb4f076e6cfce7288b2f0fa
+source_pdf_sha256: dda29bc43a93e21533864b63897a644501c3aacad2a95983de956664b6515dd3
+pdf_pages: 27
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 37
+local_pdf_images: 27
+requires_human_review: true

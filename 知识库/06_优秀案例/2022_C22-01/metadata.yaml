@@ -1,0 +1,36 @@
+source_id: C22-01
+year: 2022
+problem: C
+title: 基于成分数据的古代玻璃制品的成分分析与鉴别
+topic: 古代玻璃成分数据分析与鉴别
+methods:
+- 描述统计
+- 相关分析
+- 假设检验
+- 聚类
+- 决策树
+- 梯度提升
+- 时间序列
+- 敏感性分析
+- 交叉验证
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2022/C22-01.md
+source_pdf: 官方优秀论文（21-25）/2022/C22-01.pdf
+source_markdown_sha256: 57c43dc8884307af93865baa0ba6fa457d6ec4bb2c74247404759a0702e62cc6
+source_pdf_sha256: 71609d64154825062e70a468f0f2c85f160f88dabbabaab128c1d3eb958a18e1
+pdf_pages: 30
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 17
+local_pdf_images: 30
+requires_human_review: true

@@ -1,0 +1,29 @@
+source_id: C24-03
+year: 2024
+problem: C
+title: 基于随机优化的农作物种植策略模型
+topic: 农作物种植策略优化
+methods:
+- 描述统计
+- 相关分析
+- 线性/整数规划
+- 随机/鲁棒优化
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2024/C24-03.md
+source_pdf: 官方优秀论文（21-25）/2024/C24-03.pdf
+source_markdown_sha256: 9731d3b9c753467580a0d4650a2e8eb7b8a789f023a04c7c26aa36838d0d82d4
+source_pdf_sha256: 4ab9de3fbb215ee507c8cc0ce863fbd13d2b4f6ed5f87e3524551d66643247da
+pdf_pages: 21
+question_sections:
+- Q1
+- Q3
+remote_image_references: 10
+local_pdf_images: 21
+requires_human_review: true

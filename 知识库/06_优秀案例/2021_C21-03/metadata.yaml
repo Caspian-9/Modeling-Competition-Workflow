@@ -1,0 +1,31 @@
+source_id: C21-03
+year: 2021
+problem: C
+title: 基于优化算法的企业原材料订购与运输规划模型
+topic: 生产企业原材料订购与运输
+methods:
+- 描述统计
+- 线性/整数规划
+- 多目标优化
+- 遗传/进化算法
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2021/C21-03.md
+source_pdf: 官方优秀论文（21-25）/2021/C21-03.pdf
+source_markdown_sha256: bca6dc8d88fa1522dd4849568d5f89f81e747b77b463f5c7ec37ea555714385e
+source_pdf_sha256: 0ec4da525adf8db48881b2a8ad672ef57092c35c92b21f3bb51ad264fb4e86d7
+pdf_pages: 30
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 8
+local_pdf_images: 30
+requires_human_review: true

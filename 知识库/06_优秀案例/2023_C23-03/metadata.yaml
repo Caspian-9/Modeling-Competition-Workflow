@@ -1,0 +1,36 @@
+source_id: C23-03
+year: 2023
+problem: C
+title: 基于价格弹性的蔬菜类商品自动定价与补货决策
+topic: 商超蔬菜销售、定价与补货
+methods:
+- 描述统计
+- 相关分析
+- 假设检验
+- 回归
+- 神经网络
+- 时间序列
+- 线性/整数规划
+- 多目标优化
+- 遗传/进化算法
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2023/C23-03.md
+source_pdf: 官方优秀论文（21-25）/2023/C23-03.pdf
+source_markdown_sha256: 0b70350172026c706a4384ab21d67310d7608c02c103f10a92acc912541e0f3e
+source_pdf_sha256: 6db65f5a8b33b0dc5ee23b2fe38e889691fe80746e18feacf10412f187e7af73
+pdf_pages: 30
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 26
+local_pdf_images: 30
+requires_human_review: true

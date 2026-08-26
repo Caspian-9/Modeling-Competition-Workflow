@@ -1,0 +1,32 @@
+source_id: C21-04
+year: 2021
+problem: C
+title: 双目标贪心优化下的企业原料订购运输方案
+topic: 生产企业原材料订购与运输
+methods:
+- 描述统计
+- 相关分析
+- 线性/整数规划
+- 多目标优化
+- 动态规划
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2021/C21-04.md
+source_pdf: 官方优秀论文（21-25）/2021/C21-04.pdf
+source_markdown_sha256: 91e995fe439957f4dede7cb2250d84ec867888f882b9a794f2e7e7f2a49b937b
+source_pdf_sha256: 0518e6526b6b41245a413881bbe1839470dbff6094e4d109c7272a26eaff7aa7
+pdf_pages: 27
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 19
+local_pdf_images: 27
+requires_human_review: true

@@ -1,0 +1,36 @@
+source_id: C25-01
+year: 2025
+problem: C
+title: 基于混合效应模型的 NIPT 时点优化与胎儿异常判定
+topic: NIPT 时点优化与异常识别
+methods:
+- 描述统计
+- 相关分析
+- 假设检验
+- 混合效应模型
+- 时间序列
+- 贝叶斯模型
+- 动态规划
+- 敏感性分析
+- 交叉验证
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.68
+source_markdown: 官方优秀论文（21-25）/2025/C25-01.md
+source_pdf: 官方优秀论文（21-25）/2025/C25-01.pdf
+source_markdown_sha256: 6e0818517c99ffb513cc6afcbc71f22e29b85357ed8aaf90a3e5c6d96529b5fa
+source_pdf_sha256: b21068f7c075dafaab635f3e8b571ca9ea444423eee3258348dc37c90f137be2
+pdf_pages: 50
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 13
+local_pdf_images: 49
+requires_human_review: true

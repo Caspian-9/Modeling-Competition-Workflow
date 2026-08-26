@@ -1,0 +1,32 @@
+source_id: C21-02
+year: 2021
+problem: C
+title: 基于双层和随机规划的原材料订购与运输问题
+topic: 生产企业原材料订购与运输
+methods:
+- 描述统计
+- 线性/整数规划
+- 随机/鲁棒优化
+- 动态规划
+- 敏感性分析
+roles:
+- modeler
+- engineer
+- writer
+- judge
+evidence_level: official_excellent_paper
+verified: false
+quality_score: 0.86
+source_markdown: 官方优秀论文（21-25）/2021/C21-02.md
+source_pdf: 官方优秀论文（21-25）/2021/C21-02.pdf
+source_markdown_sha256: 34aa4da3954103b4b77a64c0ffb5700726b7467de746db727717a846acfa4883
+source_pdf_sha256: 71f0cd1703d0477b14ae0af36ea72eea237ea14b0d2aa71e0e9560c550c36561
+pdf_pages: 22
+question_sections:
+- Q1
+- Q2
+- Q3
+- Q4
+remote_image_references: 14
+local_pdf_images: 22
+requires_human_review: true
