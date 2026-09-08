@@ -1,0 +1,4 @@
+interface:
+  display_name: "数学建模独立评审"
+  short_description: "按需审查题意、模型、结果和论文风险"
+  default_prompt: "使用 $judge-modeling-work 独立评审指定内容，以中文先报告高影响问题。"

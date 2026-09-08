@@ -1,0 +1,4 @@
+interface:
+  display_name: "数学建模工程师"
+  short_description: "实现并验证数据处理、模型和数值实验"
+  default_prompt: "使用 $engineer-modeling-experiments 以中文完成当前数学建模实验并产出可复现结果。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "数学建模主 Agent"
+  short_description: "在桌面对话中接收题目与数据并持续完成数学建模"
+  default_prompt: "使用 $orchestrate-modeling-work 启动或继续当前数学建模 case；新 case 先询问 case ID 和附件，并以中文推进解题。"

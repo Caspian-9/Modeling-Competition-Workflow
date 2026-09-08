@@ -1,200 +1,118 @@
-# 国赛 C 题多 Agent 知识库建设计划
+# FAST 工作流重构计划
 
-## 1. 建设目标
+更新日期：2026-09-04
 
-在本地建立面向 Dify 多 Agent 工作流的数学建模知识库，服务四个角色：评委、建模手、工程师和论文手。系统应支持题目拆解、实时计划、阶段审查、返工闭环、标准化评分、模型设计、代码实现与论文输出。
+状态：**已完成**
 
-建设时严格区分：
+2026-09-07 桌面对话附件入口：**已完成**
 
-- **静态知识**：方法论、统计规范、工程规范、写作规范、评分规则和优秀案例，进入 Dify 知识库。
-- **运行时状态**：当前题干、数据、代码、实验结果、图表、评审记录和实时计划，保存在项目目录或数据库中，不写入向量知识库。
+## 决策
 
-## 2. 总体架构
+项目默认采用 `Skill-first + Thin Harness`，不再运行强制的
+`Judge -> Librarian -> Modeler -> Engineer -> Modeler -> Writer` 状态机。
 
-```text
-共享基础知识 ─┬─ 建模手知识
-              ├─ 工程师知识
-              ├─ 论文手知识
-              └─ 评委规则
-                    │
-优秀案例证据库 ─────┘
-                    │
-题干 → 评委拆题 → 数据审计 → 建模 → 实现与实验 → 写作 → 终审
-             ↑           每阶段 PASS / CONDITIONAL_PASS / REWORK   │
-             └────────────────返工闭环──────────────────────────────┘
-```
+- 用户直接交互的 Codex 会话是持续工作的主 Agent，同时负责题意理解、建模决策、结果解释和论文组织。
+- Engineer、Librarian、Judge 按实际需要调用；Writer 默认作为主 Agent 在同一上下文中启用的写作 Skill，而不是独立交接 Job。
+- Harness 只负责确定性机械工作：case 初始化、raw 文件登记、实验 manifest、受控运行、并行运行、确定性 QC、结果选择记录和进度汇总。
+- Harness 运行元数据只保存在实验 sidecar 文件中，不得进入论文正文。
+- 历史 `cases/` 不迁移、不改写；新 CLI 能以只读方式识别旧 case，并允许在其中创建 FAST 工作区。
 
-## 3. 知识库目录
+## FAST 主流程
 
 ```text
-知识库/
-├─ 00_规范与索引/
-├─ 01_共享基础/
-├─ 02_建模手/
-├─ 03_工程师/
-├─ 04_论文手/
-├─ 05_评委/
-├─ 06_优秀案例/
-└─ 07_测试集/
+用户 + 主 Agent（连续会话）
+  |-- 读取题面与数据，维护 workspace/brief.md、symbols.md、progress.md
+  |-- 按需调用 Librarian：领域事实、论文、标准、代码线索
+  |-- 按需调用 Engineer：EDA、预处理、模型、验证、优化
+  |     `-- Thin Harness：manifest -> run -> deterministic QC
+  |-- 主 Agent 比较结果并记录 selection.json
+  |-- 在同一上下文启用 Writer Skill，持续写 paper/manuscript.md
+  `-- 按需调用独立 Judge：关键方案、风险结果、终稿
 ```
 
-运行时项目单独保存：
+默认每小问只有：
 
 ```text
-比赛项目/当前题目/
-├─ problem_statement.md
-├─ plan_state.json
-├─ requirement_matrix.json
-├─ data/
-├─ src/
-├─ outputs/
-├─ figures/
-├─ reviews/
-└─ paper/
+主 Agent -> Engineer（必要时并行）-> 主 Agent 解释与选择 -> 写入论文
 ```
 
-## 4. 四个角色的知识范围
-
-### 4.1 评委
-
-- 任务动词、显式要求、隐式要求和交付物识别。
-- 小问依赖图及需求追踪矩阵。
-- 数据、建模、工程、实验和论文阶段门禁。
-- 数据泄漏、约束遗漏、指标误用、不可复现等红线。
-- 0–4 级锚定评分量表、返工优先级和验收标准。
-- 对优秀论文进行批判性评析，而非把优秀论文视为绝对正确答案。
-
-### 4.2 建模手
-
-- 描述统计、假设检验、回归、广义线性及混合效应模型。
-- 成分数据、面板/纵向数据、生存分析、因果与机制分析。
-- 聚类、降维、分类、回归、异常检测和集成学习。
-- 时间序列、零膨胀模型、需求预测。
-- 线性、整数、多目标、随机、鲁棒和风险优化。
-- 深度学习、图神经网络、自编码器、Transformer 等适用边界。
-- 蒙特卡洛、Bootstrap、敏感性、不确定性和消融分析。
-- 创新必须体现为针对题目结构的有效增量，并由对照实验支撑。
-
-### 4.3 工程师
-
-- 数据字典、主键、类型、单位、编码、缺失、重复及异常审计。
-- EDA、特征工程、正确的数据划分和 Pipeline 防泄漏。
-- 模型实现、调参、概率校准、阈值优化及不平衡学习。
-- 残差、学习曲线、错误样本、求解器状态及约束违反诊断。
-- 随机种子、配置、日志、环境、测试和可复现命令。
-- 交付代码、README、环境文件、指标 JSON、图表和结果表。
-
-### 4.4 论文手
-
-- 国赛论文结构、摘要、问题分析、假设、符号和模型表达。
-- 结果解释、图表规范、LaTeX 模板和参考文献。
-- 建立“论文主张—指标文件—图表—代码版本”证据链。
-- 只使用通过评委审核的实验结果，不自行生成或修改数值。
-
-## 5. 优秀论文加工规范
-
-每篇逻辑论文生成：
+## 新目录约定
 
 ```text
-paper_id/
-├─ metadata.yaml
-├─ 00_论文卡片.md
-├─ 01_清洗正文.md
-├─ 02_题目与小问映射.md
-├─ 03_Q1_方法与结果.md
-├─ 04_Q2_方法与结果.md
-├─ ...
-├─ 08_创新点.md
-├─ 09_评委批判性审查.md
-└─ assets/
+cases/<case_id>/
+|-- case.json                    # 最小 case 信息，无阶段状态机
+|-- raw/                         # 用户原始题面和数据，只读
+|-- workspace/
+|   |-- raw_inventory.json       # hash、格式和题面提取状态
+|   |-- problem.md               # 从 PDF 提取的题面
+|   |-- brief.md                 # 主 Agent 的题意与总体思路
+|   |-- symbols.md               # 全文符号表
+|   `-- progress.md              # 面向用户的简洁进度
+|-- data/
+|   |-- interim/
+|   `-- processed/
+|-- questions/<Q>/
+|   |-- analysis.md              # 当前问连续推理与结论
+|   |-- research/                # 按需检索结果
+|   |-- experiments/<EXP>/
+|   |   |-- experiment.json
+|   |   |-- code/
+|   |   |-- outputs/
+|   |   |-- runs/
+|   |   `-- qc.json
+|   |-- figures/
+|   `-- selection.json           # 当前采用结果及理由
+`-- paper/
+    |-- manuscript.md
+    |-- figures/
+    |-- references.md
+    `-- reviews/
 ```
 
-所有加工结果保留原始文件路径、质量标记和待人工复核项。原始资料只读，不覆盖。
+## 实施步骤
 
-## 6. 元数据与切块
+1. **最小合同和 CLI**：完成 FAST case、raw inventory、experiment、run、QC、selection 的数据模型和命令设计。
+2. **薄 Harness**：重写 `harness/`，保留 Windows 进程树超时回收，移除状态机、Agent Dispatcher、Dashboard、checkpoint、artifact registry、staging promotion 和 literature pipeline。
+3. **Skill-first 角色**：重写主 Agent、Engineer、Writer、Librarian、Judge Skill；删除 Supervisor Skill。所有角色默认中文，按需读取知识，不再要求 JSON handoff。
+4. **入口与文档**：新增根目录 `start-fast.ps1`，重写 README、Harness README、case 模板和 `AGENTS.md`。
+5. **清理与验证**：删除旧 schema、examples 和测试，建立覆盖新 CLI、intake、runner、QC、batch、selection 的测试；运行 Skill 校验、`compileall` 和 `unittest`。
 
-核心元数据：`source_id`、`year`、`problem`、`question_id`、`section_type`、`topic`、`methods`、`roles`、`evidence_level`、`verified`、`quality_score` 和原始来源。
+## 验收标准
 
-- 按章节和完整语义单元切分，不按固定字符机械截断。
-- 公式、变量解释和适用条件保持在同一块。
-- 每个小问独立；表题、表头和解释保持完整。
-- 建议子块 300–600 token，父块 1200–2500 token。
-- 检索采用混合检索、元数据过滤和重排序。
+- 新 case 只需执行一次初始化并把 PDF、XLSX/CSV 放入 `raw/`。
+- 主 Agent 不依赖中央状态机即可从题面持续工作到论文完成。
+- 单个实验可记录输入 hash、命令、seed、退出码、耗时、日志和输出 hash。
+- 多实验可在一个命令中并行运行，默认最多 8 个 worker。
+- QC 只报告确定性完整性，不冒充语义或建模质量评审。
+- Writer 默认不读取 `runs/`、`qc.json` 或 Harness 日志；论文中不得出现 Job、artifact、staging、QC 状态等内部治理语言。
+- Judge 和 Librarian 未被需要时不产生任何调用与 token 成本。
+- `python -m unittest discover -s harness/tests -v` 全部通过。
 
-## 7. 评委工作流
+## 非目标
 
-评委初始化并版本化维护 `plan_state.json` 和 `requirement_matrix.json`。每次审核输出：
+- 不迁移或清理历史 case 产物。
+- 不提供后台 Supervisor、Dashboard 或 Agent 自动恢复。
+- 不强制 tournament、固定候选数量、固定论文槽位或逐阶段审批。
+- 不用 Harness 代替主 Agent 的建模判断、论文审校或用户最终决策。
 
-- `PASS`：进入下一阶段。
-- `CONDITIONAL_PASS`：不阻断，但设置限期修复项。
-- `REWORK`：存在导致结论无效的缺陷。
+## 完成记录
 
-每个返工项必须包含责任角色、具体任务和可验证的验收条件。
+- 已将 CLI 收缩为 `init`、`intake`、`status`、`experiment-create`、`run`、`run-batch`、`qc` 和 `select`。
+- 已删除旧状态机、Agent Dispatcher、Dashboard、checkpoint、artifact registry、staging、literature pipeline、旧 schema 和对应测试。
+- 已将交互默认角色改为持续主 Agent，删除 Supervisor Skill；Engineer、Librarian、Judge 改为按需调用，Writer 默认在主会话中使用。
+- 已增加论文上下文隔离，禁止 Writer 消费旧状态、Agent 日志、运行日志和治理字段。
+- 已保留 Windows 进程树超时回收，并使实验子进程不继承 API key 等凭据。
+- 已新增根目录 `start-fast.ps1` 和完整快速开始文档。
+- 验证通过：5 个 Skill quick validation、PowerShell 语法检查、`ruff`、`compileall` 和 14 项单元测试。
 
-## 8. 标准化评分
+## 桌面对话附件入口
 
-所有指标采用 0–4 级锚定评分，最终得分为：
+目标：在 GPT 桌面版对话中询问 case ID 与附件，由主会话将用户明确附加的题目和数据交给 Harness；不要求用户使用终端。
 
-\[
-S=\sum_i w_i\frac{l_i}{4}
-\]
+1. 新增 `chat-intake`：初始化或打开 case，复制附件至 `raw/`，登记 hash 后运行常规 intake。
+2. 题面 PDF 由当前会话 PDF 能力复核，`workspace/problem.md` 保留可恢复文本。
+3. `.xlsx` 自动按工作表导出 UTF-8 CSV 至 `data/interim/raw_csv/`，并在 raw inventory 记录源文件、sheet、行列数和 hash。
+4. 更新主 Agent Skill、AGENTS、README 和 case 模板，明确桌面对话的询问、附件、异常与论文隔离规则。
+5. 新增附件复制和 XLSX 多工作表转换测试，运行全量验证。
 
-| 维度 | 权重 |
-|---|---:|
-| 题意理解与任务覆盖 | 10 |
-| 数据理解、清洗与 EDA | 12 |
-| 模型合理性 | 15 |
-| 统计严谨性 | 15 |
-| 创新性 | 10 |
-| 代码与可复现性 | 10 |
-| 结果验证与稳健性 | 12 |
-| 解释与决策价值 | 6 |
-| 论文结构与表达 | 7 |
-| 规范与完整交付 | 3 |
-
-硬性门槛包括：小问遗漏、数据泄漏、违反优化约束、核心结果不可复现、伪造数据/指标/文献。复杂模型没有基线对比时，创新性不得超过 2 级。
-
-## 9. 实施阶段
-
-### 当前进度
-
-- [x] 第一阶段：语料质量治理
-- [x] 第二阶段：核心方法库
-- [ ] 第三阶段：Dify 工作流
-- [ ] 第四阶段：评测与迭代
-
-### 第一阶段：语料质量治理（当前阶段）
-
-- 审计 2021–2025 年 14 组 PDF/Markdown。
-- 检测串文、重复、章节异常、OCR 噪声和远程图片。
-- 对照 PDF 页数及页面标记；处理逻辑论文与容器文件的关系。
-- 生成规范化清洗副本、元数据、论文卡片、分小问案例和批判性审查。
-- 输出质量报告和待人工复核清单。
-
-验收标准：原始资料不被覆盖；每篇资料都有可追溯元数据和质量状态；严重污染内容不得进入可检索正文。
-
-### 第二阶段：核心方法库
-
-- 建设 30–50 张高频模型卡。
-- 建设统计严谨性检查卡、工程故障卡、写作模板和评分规则。
-
-完成情况：已生成40张模型卡、12张统计严谨性检查卡、16张工程故障卡、6份论文规范和8份评委规范；已建立统一索引、方法—案例映射、Dify六分库配置和质量报告，并通过自动完整性验证。
-
-外部论文模板整合：已接入 `知识库/04_论文手/克隆仓库/math-modeling-paper-template-in-2026-main`。上游采用MIT许可证；LaTeX模板作为文件资产保留，精选写作规范进入论文手Dify导入清单。未经官方来源核验的2026 AI合规解读、摘要范例和专用话术不进入主知识库。外部建议与当年官方文件冲突时，以官方文件为准。
-
-官方格式规范：已接入 `知识库/00_规范与索引/全国大学生数学建模竞赛论文格式规范.pdf`（2026年修订稿），并生成逐页文本、条款卡、提交检查表和外部模板冲突覆盖表。该来源标记为A级，优先于知识库经验规则和外部模板；评委终审新增官方格式门禁。
-
-### 第三阶段：Dify 工作流
-
-- 配置四角色检索范围、结构化输入输出和阶段条件分支。
-- 实现实时计划、需求追踪、成果登记、返工与版本控制。
-
-### 第四阶段：评测与迭代
-
-- 用往年题目建立拆题、检索、模型选择、代码审查和论文评分测试集。
-- 测试知识引用准确性、评分稳定性及论文结果一致性。
-
-## 10. 当前资料的特殊处理决定
-
-- `C25-01.md`：源 PDF/Markdown 存在 NIPT 与供应链内容交错，按页码标记与主题拆出 NIPT 逻辑正文；被排除内容进入审计记录。
-- `C24-02.md`：按用户确认视为前部局部污染，优先识别并移除开头非目标论文内容，正文主体不做激进拆分；边界不确定处标记待人工复核。
+完成记录：已新增 `chat-intake`，主 Agent 会在桌面对话中询问 case ID 与附件；PDF 由 `$pdf` Skill 复核，XLSX 由 `$spreadsheets` Skill 检查并自动导出 CSV。`ruff`、`compileall`、主 Agent Skill 校验、PowerShell 语法检查和 16 项单元测试均通过。

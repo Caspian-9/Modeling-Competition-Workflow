@@ -1,0 +1,4 @@
+interface:
+  display_name: "数学建模论文写作"
+  short_description: "在连续建模上下文中撰写严谨中文论文和图表"
+  default_prompt: "使用 $write-modeling-paper 将当前 case 的真实建模推理写成自然、严谨的中文竞赛论文。"

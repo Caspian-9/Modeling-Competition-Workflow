@@ -1,0 +1,4 @@
+interface:
+  display_name: "数学建模证据检索"
+  short_description: "按需核验领域、方法、标准、数据和代码来源"
+  default_prompt: "使用 $research-modeling-literature 检索当前建模问题所需证据，并以中文给出可迁移结论与边界。"

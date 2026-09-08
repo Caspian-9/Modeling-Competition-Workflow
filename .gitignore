@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.harness-cache/
 .venv/
 venv/
 
@@ -23,3 +24,18 @@ Desktop.ini
 *.tmp
 *.log
 ~$*
+
+# FAST case-local inputs and disposable run output
+cases/*/raw/**
+cases/*/questions/*/experiments/*/runs/**
+cases/*/paper/build/**
+
+# Historical pre-FAST case runtime
+cases/*/data/raw/**
+cases/*/initialization/experiments/*/logs/**
+cases/*/initialization/experiments/*/.container-output-*/**
+cases/*/questions/*/experiments/*/logs/**
+cases/*/questions/*/experiments/*/.container-output-*/**
+cases/*/agent_jobs/**
+cases/*/supervision/**
+cases-demo/
