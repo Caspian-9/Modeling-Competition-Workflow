@@ -15,3 +15,5 @@ python -m harness intake <CASE_ID>
 `.xlsx` 输入会自动将每个工作表导出为 `data/interim/raw_csv/` 下的 UTF-8 CSV，原工作簿保持只读。
 
 主 Agent 持续维护 `workspace/`、`questions/<Q>/analysis.md` 和 `paper/manuscript.md`。实验通过 `experiment-create`、`run`、`qc` 和 `select` 管理；Judge、Librarian 和独立 Engineer 均按需调用。
+
+raw intake 后，先完成 `initialization/`：主 Agent 写 `plan.md`，Engineer 写 `engineer_report.md` 并将清洗数据置于 `data/interim/` 或 `data/processed/`，主 Agent 写 `summary.md`，Writer Figure Skill 在 `figures/` 生成中文 EDA 图，Writer 写 `front_matter.md`。用户审阅后再进入 Q1。

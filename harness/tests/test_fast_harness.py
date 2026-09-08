@@ -80,6 +80,44 @@ class FastHarnessTests(unittest.TestCase):
         self.assertEqual(marker.read_text(encoding="utf-8"), '{"legacy": true}')
         self.assertTrue((legacy / "workspace" / "brief.md").is_file())
 
+    def test_new_analysis_template_covers_exploration_and_validation(self) -> None:
+        for question in self.config.questions:
+            with self.subTest(question=question):
+                analysis = (
+                    self.case_dir / "questions" / question / "analysis.md"
+                ).read_text(encoding="utf-8")
+                self.assertIn(f"# {question} 分析", analysis)
+                for required in (
+                    "问题与信息边界",
+                    "探索发现与模型影响",
+                    "建模选择与验证计划",
+                    "实际检验证据与修正",
+                    "采用结论与剩余风险",
+                    "未检查、通过、失败、不适用",
+                    "无数据题",
+                    "允许库外方法",
+                    "QC 不证明科学有效",
+                ):
+                    self.assertIn(required, analysis)
+
+    def test_reinitialize_preserves_existing_analysis_bytes(self) -> None:
+        path = self.case_dir / "questions" / "Q1" / "analysis.md"
+        original = "# 已有推理\r\n\r\n用户正文和未完成假设。\r\n".encode("utf-8")
+        path.write_bytes(original)
+        self.repository.initialize_case("FAST-C")
+        self.assertEqual(path.read_bytes(), original)
+
+    def test_legacy_analysis_preserved_when_fast_layout_is_added(self) -> None:
+        question_dir = self.root / "cases" / "LEGACY" / "questions" / "Q1"
+        question_dir.mkdir(parents=True)
+        path = question_dir / "analysis.md"
+        original = "# 历史分析\n不得覆盖。\n".encode("utf-8")
+        path.write_bytes(original)
+        self.repository.initialize_case("LEGACY", ("Q1", "Q2"))
+        self.assertEqual(path.read_bytes(), original)
+        new_analysis = question_dir.parent / "Q2" / "analysis.md"
+        self.assertIn("实际检验证据与修正", new_analysis.read_text(encoding="utf-8"))
+
     def test_intake_extracts_text_and_inventories_data(self) -> None:
         inventory = self.prepare_raw()
         self.assertTrue(inventory["ready"])
@@ -88,6 +126,68 @@ class FastHarnessTests(unittest.TestCase):
             "数学建模题目",
             (self.case_dir / "workspace" / "problem.md").read_text(encoding="utf-8"),
         )
+
+    def test_initialization_layout_and_status_progression(self) -> None:
+        initialization = self.case_dir / "initialization"
+        self.assertTrue((initialization / "README.md").is_file())
+        self.assertTrue((initialization / "figures").is_dir())
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "WAITING_FOR_RAW",
+        )
+        self.prepare_raw()
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "NOT_STARTED",
+        )
+        (initialization / "plan.md").touch()
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "NOT_STARTED",
+        )
+        (initialization / "plan.md").write_text("# 数据计划\n", encoding="utf-8")
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "ENGINEERING",
+        )
+        (initialization / "engineer_report.md").write_text(
+            "# 数据审计与 EDA\n", encoding="utf-8"
+        )
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "SYNTHESIS",
+        )
+        (initialization / "summary.md").write_text(
+            "# 初始化总结\n", encoding="utf-8"
+        )
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "FIGURES",
+        )
+        (initialization / "figures" / "eda.svg").write_text(
+            "<svg></svg>\n", encoding="utf-8"
+        )
+        self.assertEqual(
+            build_status(self.repository, "FAST-C")["initialization"]["status"],
+            "WRITING",
+        )
+        (initialization / "front_matter.md").write_text(
+            "# 前置正文\n", encoding="utf-8"
+        )
+        status = build_status(self.repository, "FAST-C")["initialization"]
+        self.assertEqual(status["status"], "READY_FOR_Q1")
+        self.assertTrue(status["user_review_required"])
+
+    def test_loading_existing_case_restores_missing_initialization_scaffold(self) -> None:
+        initialization = self.case_dir / "initialization"
+        (initialization / "README.md").unlink()
+        (initialization / "figures").rmdir()
+
+        status = build_status(self.repository, "FAST-C")["initialization"]
+
+        self.assertTrue((initialization / "README.md").is_file())
+        self.assertTrue((initialization / "figures").is_dir())
+        self.assertEqual(status["status"], "WAITING_FOR_RAW")
 
     def test_intake_rejects_broken_xlsx(self) -> None:
         (self.case_dir / "raw" / "problem.txt").write_text(

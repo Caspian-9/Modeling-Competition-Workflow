@@ -35,6 +35,8 @@ description: "作为数学建模 Writer 的独立绘图 Skill，基于已核验�
 4. 对多面板图完成 `$nature-figure` 的对齐和碰撞检查；任何阻断问题修复后重跑 QA。
 5. 在 `figures/figure_notes.md` 记录图支持的结论、源数据、脚本入口、导出文件和已知边界。该文件供 Writer 追溯，不得直接复制到论文正文。
 
+初始化 EDA 图使用 `initialization/figures/` 作为输出根目录，并将 Figure Spec、脚本、成图与 `figure_notes.md` 保存在该目录。它们只展示 `initialization/summary.md` 和 Engineer 报告支持的数据事实，不能提前给出任何小问结论。
+
 ## 输出
 
 向 Writer 返回：

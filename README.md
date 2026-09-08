@@ -12,6 +12,7 @@ FAST 重构已替换原强治理 Harness：
 | 角色调用 | Engineer、Librarian、Judge 按需；Writer 默认在主会话中启用 |
 | 正式绘图 | 强制调用 Writer Figure Skill，再由其调用 `nature-figure` |
 | 数据入口 | `cases/<CASE_ID>/raw/` |
+| 初始化 | Q1 前完成数据预处理、EDA、中文 EDA 图和摘要前正文 |
 | 实验内核 | manifest、输入 hash、seed、受控运行、日志、输出 hash |
 | 并行实验 | `run-batch`，默认最多 8 个 worker |
 | QC | 仅确定性运行与文件完整性检查 |
@@ -80,6 +81,12 @@ cases/<CASE_ID>/
 |   |-- brief.md
 |   |-- symbols.md
 |   `-- progress.md
+|-- initialization/
+|   |-- plan.md                 # 主 Agent 的数据口径、清洗与 EDA 计划
+|   |-- engineer_report.md      # Engineer 数据审计、预处理与 EDA 结果
+|   |-- summary.md              # 主 Agent 的初始化总结
+|   |-- front_matter.md         # Writer 摘要前正文，用户审阅后并入论文
+|   `-- figures/                # Writer Figure Skill 生成的中文 EDA 图与 QA
 |-- data/
 |   |-- interim/
 |   |   `-- raw_csv/                    # XLSX 各工作表自动导出的 UTF-8 CSV
@@ -251,6 +258,22 @@ python -m harness run-batch 2025C-0903 Q1 EXP-A EXP-B EXP-C --max-workers 8
 ```
 
 图型召回不是模板代码复用，绘图工具不得新增统计结论或改变数据筛选口径。正式图、脚本和简洁来源说明保存在当前问 `figures/` 或 `paper/figures/`。
+
+## 初始化
+
+raw intake 后、Q1 前默认完成一次共享初始化：
+
+```text
+主 Agent：initialization/plan.md
+  -> Engineer：数据审计、预处理、EDA 源数据与 engineer_report.md
+  -> 主 Agent：summary.md
+  -> Writer Figure Skill：initialization/figures/ 中文 EDA 图
+  -> Writer：front_matter.md（不含摘要与各问结果）
+  -> 用户审阅
+  -> Q1
+```
+
+使用 `python -m harness status <CASE_ID>` 可查看 `initialization.status` 及缺失产物。它依次显示 `WAITING_FOR_RAW`、`NOT_STARTED`、`ENGINEERING`、`SYNTHESIS`、`FIGURES`、`WRITING` 和 `READY_FOR_Q1`，不引入独立状态机或后台服务。
 
 ## 验证
 

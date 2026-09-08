@@ -73,13 +73,17 @@ class CaseRepository:
         raw = self.read_json(path)
         if not isinstance(raw, dict):
             raise ValidationError("case.json must contain an object")
-        return CaseConfig.from_dict(raw)
+        config = CaseConfig.from_dict(raw)
+        # Existing FAST cases gain newly introduced scaffolding without replacing work.
+        self._ensure_layout(config)
+        return config
 
     def _ensure_layout(self, config: CaseConfig) -> None:
         case_dir = self.case_dir(config.case_id)
         for relative in (
             "raw",
             "workspace",
+            "initialization/figures",
             "data/interim",
             "data/processed",
             "paper/figures",
@@ -98,6 +102,16 @@ class CaseRepository:
             case_dir / "workspace" / "progress.md",
             "# 项目进度\n\n- 当前状态：等待读取题面与数据\n",
         )
+        self._write_if_missing(
+            case_dir / "initialization" / "README.md",
+            "# 初始化：数据预处理与探索\n\n"
+            "在进入 Q1 前依次完成：\n\n"
+            "1. `plan.md`：主 Agent 明确数据口径、清洗与 EDA 目标。\n"
+            "2. `engineer_report.md`：Engineer 审计、预处理和 EDA 结果。\n"
+            "3. `summary.md`：主 Agent 总结可用数据、EDA 结论和建模影响。\n"
+            "4. `figures/`：Writer Figure Skill 生成的中文 EDA 图。\n"
+            "5. `front_matter.md`：Writer 完成的摘要之外前置正文，供用户审阅后并入论文。\n",
+        )
         self._write_if_missing(case_dir / "paper" / "manuscript.md", "# 论文正文\n")
         self._write_if_missing(case_dir / "paper" / "references.md", "# 参考文献\n")
         for question in config.questions:
@@ -106,7 +120,26 @@ class CaseRepository:
                 (question_dir / relative).mkdir(parents=True, exist_ok=True)
             self._write_if_missing(
                 question_dir / "analysis.md",
-                f"# {question} 分析\n\n由主 Agent 记录问题理解、模型选择、结果解释和结论。\n",
+                f"# {question} 分析\n\n"
+                "由主 Agent 持续维护；以下提示按题目选用，可合并，不是阶段审批。\n"
+                "知识入口：知识库/00_规范与索引/问题驱动入口.md。\n\n"
+                "## 问题与信息边界\n\n"
+                "明确目标、分析单位、输出、约束、数据生成过程与可得信息；"
+                "预测任务先隔离最终测试信息。\n\n"
+                "## 探索发现与模型影响\n\n"
+                "记录发现及证据 → 假设或反例 → 模型影响，区分观察与猜测。"
+                "无数据题用量纲、机制、边界或可解小例代替数据 EDA。\n\n"
+                "## 建模选择与验证计划\n\n"
+                "记录变量、公式、假设、简单基线和选择理由；允许库外方法。"
+                "拟合、调参或正式求解前明确验证设计、指标或约束检查及失败处置。\n\n"
+                "## 实际检验证据与修正\n\n"
+                "逐项记录关键主张、检查、实际结果及证据位置、后续动作。"
+                "区分未检查、通过、失败、不适用；通过需证据，不适用需解释。"
+                "核心检查缺失或失败时补实验、修正模型或缩小结论。"
+                "计划不等于完成，QC 不证明科学有效。\n\n"
+                "## 采用结论与剩余风险\n\n"
+                "记录直接答案、采用理由、不确定性、失败情形、适用范围与待办；"
+                "不得将探索性结果写成独立验证结论。\n",
             )
 
     @staticmethod
